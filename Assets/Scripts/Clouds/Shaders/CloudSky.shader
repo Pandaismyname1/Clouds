@@ -1,5 +1,5 @@
 
-Shader "Hidden/Clouds"
+Shader "FX/Clouds"
 {
     
     Properties
@@ -102,6 +102,8 @@ Shader "Hidden/Clouds"
             float4 debugChannelWeight;
             float debugTileAmount;
             float viewerSize;
+
+            float debug;
             
             float remap(float v, float minOld, float maxOld, float minNew, float maxNew) {
                 return minNew + (v-minOld) * (maxNew - minNew) / (maxOld-minOld);
@@ -313,6 +315,7 @@ Shader "Hidden/Clouds"
                 const float stepSize = 11;
                 float transmittance = 1;
                 float3 lightEnergy = 0;
+                debug = rayOffsetStrength;
 
                 while (dstTravelled < dstLimit) {
                     rayPos = entryPoint + rayDir * dstTravelled;
@@ -337,9 +340,10 @@ Shader "Hidden/Clouds"
                 // Composite sky + background
                 float3 skyColBase = lerp(colA,colB, sqrt(abs(saturate(rayDir.y))));
                 float3 backgroundCol = tex2D(_MainTex,i.uv);
+                // float4 debug = DetailNoiseTex.SampleLevel(samplerNoiseTex, float3(i.uv, 1), 1);
                 float dstFog = 1-exp(-max(0,depth) * 8*.0001);
                 float3 sky = dstFog * skyColBase;
-                backgroundCol = backgroundCol * (1-dstFog) + sky;
+                // backgroundCol = backgroundCol * (1-dstFog) + sky;
 
                 // Sun
                 float focusedEyeCos = pow(saturate(cosAngle), params.x);
@@ -348,8 +352,8 @@ Shader "Hidden/Clouds"
                 // Add clouds
                 float3 cloudCol = lightEnergy * _LightColor0;
                 float3 col = backgroundCol * transmittance + cloudCol;
-                col = saturate(col) * (1-sun) + _LightColor0*sun;
-                return float4(col,0);
+                // col = saturate(col) * (1-sun) + _LightColor0*sun;
+                return float4(col, 0);
             }
             ENDCG
         }

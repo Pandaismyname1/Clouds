@@ -39,7 +39,7 @@ public class WeatherMap : MonoBehaviour {
         CreateBuffer (offsets, sizeof (float) * 4, "offsets");
 
         var settings = (SimplexNoiseSettings.DataStruct) noiseSettings.GetDataArray ().GetValue (0);
-        settings.offset += FindObjectOfType<CloudMaster> ().heightOffset;
+        settings.offset += FindObjectOfType<CloudUrpProxy> ().heightOffset;
         CreateBuffer (new SimplexNoiseSettings.DataStruct[] { settings }, noiseSettings.Stride, "noiseSettings", 0);
         noiseCompute.SetTexture (0, "Result", weatherMap);
         noiseCompute.SetInt ("resolution", resolution);
