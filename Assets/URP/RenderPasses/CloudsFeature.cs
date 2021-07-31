@@ -101,6 +101,7 @@
                 if (cloudSettings.TriggerUpdate)
                 {
                     UpdateEverything();
+                    cloudSettings.TriggerUpdate = false;
                 }
                 else
                 {
